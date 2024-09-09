@@ -1,7 +1,7 @@
 export default class URL {
 	constructor(url, base = undefined) {
 		const name = "URL";
-		const version = "2.1.0";
+		const version = "2.1.2";
 		console.log(`\n🟧 ${name} v${version}\n`);
 		url = this.#parse(url, base);
 		return this;
@@ -41,11 +41,9 @@ export default class URL {
 		if (url.search || base?.search) {
 			this.search = url.search || base.search;
 			Object.freeze(this.search);
-			if (this.search) {
-				const array = this.search.slice(1).split("&").map((param) => param.split("="));
-				this.searchParams = new Map(array);
-			};
+			if (this.search) this.searchParams = this.search.slice(1).split("&").map((param) => param.split("="));
 		};
+		this.searchParams = new Map(this.searchParams || []);
 		this.harf = this.toString();
 		Object.freeze(this.harf);
 		return this;
@@ -58,7 +56,7 @@ export default class URL {
 		if (this.hostname) string += this.hostname;
 		if (this.port) string += ":" + this.port;
 		if (this.pathname) string += this.pathname;
-		if (this.searchParams) string += "?" + Array.from(this.searchParams).map(param => param.join("=")).join("&");
+		if (this.searchParams.size !== 0) string += "?" + Array.from(this.searchParams).map(param => param.join("=")).join("&");
 		return string;
 	};
 
