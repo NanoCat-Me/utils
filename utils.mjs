@@ -10,4 +10,5 @@ export const wait = (delay = 1000) => new Promise(resolve => setTimeout(resolve,
 import done from "./done.mjs";
 export const getScript = async (url) => await fetch(url).then(response => response.body);
 import runScript from "./runScript.mjs";
+//import GRPC from "./GRPC.mjs";
 export { $platform, URL, _, Storage, fetch, notification, logError, done, runScript };
