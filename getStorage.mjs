@@ -14,10 +14,10 @@ export default function getStorage(key, names, database) {
     /***************** Default *****************/
     const Store = { Settings: database?.Default?.Settings || {}, Configs: database?.Default?.Configs || {}, Caches: {} };
     /***************** Database *****************/
-    [names].flat(Infinity).forEach(name =>
+    [names].flat(Infinity).forEach(name => {
         Store.Settings = { ...Store.Settings, ...database?.[name]?.Settings };
         Store.Configs = { ...Store.Configs, ...database?.[name]?.Configs };
-    };
+    });
     /***************** Argument *****************/
     switch (typeof $argument) {
         case "string":
