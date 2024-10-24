@@ -21,10 +21,9 @@ export default function getStorage(key, names, database) {
         case "string":
             $argument = Object.fromEntries($argument.split("&").map((item) => item.split("=").map(i => i.replace(/\"/g, ''))));
         case "object":
-            Object.keys($argument).forEach(key => {
-                $argument[key] = undefined;
-                _.set($argument, key, $argument[key]);
-            });
+            let argument = {};
+            Object.keys($argument).forEach(key => _.set(argument, key, $argument[key]));
+            $argument = argument;
             break;
         case "undefined":
             break;
