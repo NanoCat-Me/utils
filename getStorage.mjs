@@ -14,17 +14,17 @@ export default function getStorage(key, names, database) {
     /***************** BoxJs *****************/
     // 包装为局部变量，用完释放内存
     // BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-    let BoxJs = Storage.getItem(key, database);
+    const $store = Storage.getItem(key, database);
     //log(`🚧 getStorage, Get Environment Variables`, `BoxJs类型: ${typeof BoxJs}`, `BoxJs内容: ${JSON.stringify(BoxJs)}`, "");
     /***************** Argument *****************/
-    let Argument = {};
     switch (typeof $argument) {
         case "string":
-            let arg = Object.fromEntries($argument.split("&").map((item) => item.split("=").map(i => i.replace(/\"/g, ''))));
-            for (let item in arg) _.set(Argument, item, arg[item]);
-            break;
+            $argument = Object.fromEntries($argument.split("&").map((item) => item.split("=").map(i => i.replace(/\"/g, ''))));
         case "object":
-            for (let item in $argument) _.set(Argument, item, $argument[item]);
+            Object.keys($argument).forEach(key => {
+                $argument[key] = undefined;
+                _.set($argument, key, $argument[key]);
+            });
             break;
         case "undefined":
             break;
