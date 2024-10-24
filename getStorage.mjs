@@ -36,7 +36,7 @@ export default function getStorage(key, names, database) {
     // BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
     const BoxJs = Storage.getItem(key, database);
     //log(`🚧 getStorage, Get Environment Variables`, `BoxJs类型: ${typeof BoxJs}`, `BoxJs内容: ${JSON.stringify(BoxJs || {})}`, "");
-    [names].flat(Infinity).forEach(name =>
+    [names].flat(Infinity).forEach(name => {
         switch (typeof BoxJs?.[name]?.Settings) {
             case "string":
                 BoxJs[name].Settings = JSON.parse(BoxJs[name].Settings);
@@ -55,7 +55,7 @@ export default function getStorage(key, names, database) {
             case "undefined":
                 break;
         };
-    };
+    });
     //log(`🚧 getStorage, Get Environment Variables`, `Store.Settings类型: ${typeof Store.Settings}`, `Store.Settings: ${JSON.stringify(Store.Settings)}`, "");
     /***************** traverseObject *****************/
     traverseObject(Store.Settings, (key, value) => {
