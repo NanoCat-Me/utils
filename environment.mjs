@@ -11,14 +11,15 @@ export function environment() {
         case "Egern":
             $environment.app = "Egern";
             return $environment
-        case "Loon":
-            let environment = $loon.split(" ");
+        case "Loon": {
+            const environment = $loon.split(" ");
             return {
                 "device": environment[0],
                 "ios": environment[1],
                 "loon-version": environment[2],
                 "app": "Loon"
             };
+        }
         case "Quantumult X":
             return {
                 "app": "Quantumult X"

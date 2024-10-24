@@ -1,9 +1,6 @@
 import { $platform, _, log } from "./utils.mjs";
 /* https://developer.mozilla.org/zh-CN/docs/Web/API/Storage/setItem */
 export default class Storage {
-	static name = "Storage";
-	static version = "1.1.0";
-	static about () { return log("", `🟧 ${this.name} v${this.version}`, "") };
 	static data = null;
 	static dataFile = 'box.dat';
 	static #nameRegex = /^@(?<key>[^.]+)(?:\.(?<path>.*))?$/;
@@ -12,11 +9,11 @@ export default class Storage {
         let keyValue = defaultValue;
         // 如果以 @
 		switch (keyName.startsWith('@')) {
-			case true:
-				const { key, path } = keyName.match(this.#nameRegex)?.groups;
+			case true: {
+				const { key, path } = keyName.match(Storage.#nameRegex)?.groups;
 				//log(`1: ${key}, ${path}`);
 				keyName = key;
-				let value = this.getItem(keyName, {});
+				let value = Storage.getItem(keyName, {});
 				//log(`2: ${JSON.stringify(value)}`)
 				if (typeof value !== "object") value = {};
 				//log(`3: ${JSON.stringify(value)}`)
@@ -29,6 +26,7 @@ export default class Storage {
 				};
 				//log(`5: ${JSON.stringify(keyValue)}`)
 				break;
+			}
 			default:
 				switch ($platform) {
 					case 'Surge':
@@ -42,11 +40,11 @@ export default class Storage {
 						keyValue = $prefs.valueForKey(keyName);
 						break;
 					case 'Node.js':
-						this.data = this.#loaddata(this.dataFile);
-						keyValue = this.data?.[keyName];
+						Storage.data = Storage.#loaddata(Storage.dataFile);
+						keyValue = Storage.data?.[keyName];
 						break;
 					default:
-						keyValue = this.data?.[keyName] || null;
+						keyValue = Storage.data?.[keyName] || null;
 						break;
 				};
 				try {
@@ -71,19 +69,20 @@ export default class Storage {
 				break;
 		};
 		switch (keyName.startsWith('@')) {
-			case true:
-				const { key, path } = keyName.match(this.#nameRegex)?.groups;
+			case true: {
+				const { key, path } = keyName.match(Storage.#nameRegex)?.groups;
 				//log(`1: ${key}, ${path}`);
 				keyName = key;
-				let value = this.getItem(keyName, {});
+				let value = Storage.getItem(keyName, {});
 				//log(`2: ${JSON.stringify(value)}`)
 				if (typeof value !== "object") value = {};
 				//log(`3: ${JSON.stringify(value)}`)
 				_.set(value, path, keyValue);
 				//log(`4: ${JSON.stringify(value)}`)
-				result = this.setItem(keyName, value);
+				result = Storage.setItem(keyName, value);
 				//log(`5: ${result}`)
 				break;
+			}
 			default:
 				switch ($platform) {
 					case 'Surge':

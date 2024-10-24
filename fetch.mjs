@@ -32,7 +32,7 @@ export default async function fetch(request = {} || "", option = {}) {
         default:
             // 转换请求参数
             if (request.timeout) {
-                request.timeout = parseInt(request.timeout, 10);
+                request.timeout = Number.parseInt(request.timeout, 10);
                 switch ($platform) {
                     case "Loon":
                     case "Shadowrocket":
@@ -62,7 +62,7 @@ export default async function fetch(request = {} || "", option = {}) {
             // 转换请求体
             if (request.bodyBytes && !request.body) {
                 request.body = request.bodyBytes;
-                delete request.bodyBytes;
+                request.bodyBytes = undefined;
             };
             // 发送请求
             return await new Promise((resolve, reject) => {
@@ -86,11 +86,11 @@ export default async function fetch(request = {} || "", option = {}) {
             // 转换请求体
             if (request.body instanceof ArrayBuffer) {
                 request.bodyBytes = request.body;
-                delete request.body;
+                request.body = undefined;
             } else if (ArrayBuffer.isView(request.body)) {
                 request.bodyBytes = request.body.buffer.slice(request.body.byteOffset, request.body.byteLength + request.body.byteOffset);
-                delete object.body;
-            } else if (request.body) delete request.bodyBytes;
+                object.body = undefined;
+            } else if (request.body) request.bodyBytes = undefined;
             // 发送请求
             return await $task.fetch(request).then(
                 response => {
@@ -99,8 +99,8 @@ export default async function fetch(request = {} || "", option = {}) {
                     return response;
                 },
                 reason => Promise.reject(reason.error));
-        case "Node.js":
-            let iconv = require("iconv-lite")
+        case "Node.js": {
+            const iconv = require("iconv-lite")
             initGotEnv(request)
             const { url, ...option } = request
             return await this.got[method](url, option)
@@ -128,5 +128,6 @@ export default async function fetch(request = {} || "", option = {}) {
                         return response;
                     },
                     error => Promise.reject(error.message));
-    };
+        }
+    }
 };
